@@ -19,4 +19,4 @@ Setting Up Relocation Insight
 
     5. Access the Website
     • Go to http://localhost:3000
-    • The website should now be runningv
+    • The website should now be running
