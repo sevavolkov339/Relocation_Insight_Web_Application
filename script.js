@@ -1,89 +1,123 @@
-document.getElementById('search-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const searchInput = document.getElementById('search-input').value;
-    fetchAreaDetails(searchInput);
+
+document.getElementById('search-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const searchInput = document.getElementById('search-input');
+    fetchAreaDetails(searchInput)
 });
 
-function fetchAreaDetails(query) {
-    // Simulate API call to fetch area details
-    const results = [
-        {
-            name: 'Berlin Mitte',
-            description: 'A central area in Berlin with rich history and culture.',
-            generalInfo: 'This area is known for its vibrant culture and historical landmarks.',
+async function fetchAreaDetails(query) {
+    try {
+        //coordinates for the search
+        const coordinatesResponse = await fetch(`http://localhost:3000/api/coordinates?address=${encodeURIComponent(query)}`);
+        const coordinates = await coordinatesResponse.json();
+        
+        if (!coordinates.lat || !coordinates.lon) {
+            throw new Error('Could not find coordinates for the specified location');
+        }
+
+        const areaDetails = {
+            name: query,
+            description: '',
+            generalInfo: '',
             transport: [
-                { station: 'Bus Stop A', time: '3 minutes', logo: 'Bus_Icon.png' },
-                { station: 'U-Bahn Station B', time: '7 minutes', logo: 'Subway_Icon.png' },
-                { station: 'Tram Station C', time: '10 minutes', logo: 'Tram_Icon.png' }
+                { station: 'Bus Stop', time: "No bus station in range", logo: 'Bus_Icon.png' },
+                { station: 'U-Bahn Station', time: "No U-Bahn station in range", logo: 'Subway_Icon.png' },
+                { station: 'Tram Station', time: "No tram station in range", logo: 'Tram_Icon.png' }
             ],
-            supermarkets: [
-                { time: '5 minutes', logo: 'rewe.png' },
-                { time: '3 minutes', logo: 'dm.png' },
-                { time: '7 minutes', logo: 'edeka.png' }
-            ],
+            supermarkets: [],
             ecoFriendly: {
-                description: 'Highly eco-friendly with multiple green spaces.',
-                parks: [
-                    { name: 'Tiergarten', distance: '1 km', time: '12 minutes' },
-                    { name: 'Monbijou Park', distance: '0.5 km', time: '6 minutes' }
-                ],
+                description: '',
+                parks: [],
                 parking: 'Limited parking available'
             }
-        }
-    ];
+        };
 
-    displayResults(results);
+        try {
+            const stationsResponse = await fetch(`http://localhost:3000/api/nearby-stations?lat=${coordinates.lat}&lon=${coordinates.lon}`);
+            const stationsData = await stationsResponse.json();
+            
+            if (stationsData[0]) {
+                areaDetails.transport[0].time = `${stationsData[0].sources_to_targets[0][0].distance} meters`;
+                areaDetails.transport[0].station = `Bus Stop ${stationsData[0].stationName}`;
+            }
+            if (stationsData[1]) {
+                areaDetails.transport[1].time = `${stationsData[1].sources_to_targets[0][0].distance} meters`;
+                areaDetails.transport[1].station = `U-Bahn Station ${stationsData[1].stationName}`;
+            }
+            if (stationsData[2]) {
+                areaDetails.transport[2].time = `${stationsData[2].sources_to_targets[0][0].distance} meters`;
+                areaDetails.transport[2].station = `Tram Station ${stationsData[2].stationName}`;
+            }
+        } catch (error) {
+            console.error('Error fetching nearby stations:', error);
+        }
+    } catch (error) {
+        console.error('Error fetching area details:', error);
+        const resultsContainer = document.getElementById('results');
+        resultsContainer.innerHTML = `
+            <div class="error-message">
+                <h2>Error</h2>
+                <p>Failed to fetch information about ${query}. Please try again later.</p>
+                <p class="error-details">${error.message}</p>
+            </div>
+        `;
+        return null;
+    }
 }
 
 function displayResults(results) {
     const resultsContainer = document.getElementById('results');
     resultsContainer.innerHTML = '';
 
-    results.forEach(result => {
+    //results is array
+    const resultsArray = Array.isArray(results) ? results : [results];
+
+    resultsArray.forEach(result => {
         const resultElement = document.createElement('div');
         resultElement.className = 'result-item';
         resultElement.innerHTML = `
-            <h2>${result.name}</h2>
+            <h2>«${result.name}»</h2>
             <p>${result.description}</p>
 
-            <!-- General Info -->
             <h3>General Info</h3>
             <p>${result.generalInfo}</p>
 
-            <!-- Transport -->
             <h3>Transport</h3>
             <ul>
                 ${result.transport.map(t => `
                     <li>
-                        <img src="ICONS/${t.logo}" alt="Transport Logo"> 
-                        ${t.station} (${t.time})
+                        <div class="transport-header">
+                            <img src="ICONS/${t.logo}" alt="Transport Logo"> 
+                            ${t.station} (${t.time})
+                            <span class="arrow arrow-down">&#9660;</span> <!-- Down arrow by default -->
+                        </div>
+                        <div class="transport-details" style="display: none;"> <!-- Hidden by default -->
+                            <p>Info about routes of ${t.station}.</p>
+                        </div>
                     </li>
                 `).join('')}
             </ul>
 
-            <!-- Close Supermarkets -->
             <h3>Close Supermarkets</h3>
             <ul>
                 ${result.supermarkets.map(s => `
                     <li>
-                        <img src="ICONS/${s.logo}" alt="Supermarket Logo"> 
-                        ${s.time} by foot
+                        <span class="supermarket-name">${s.name}</span> (${s.time} by foot)
                     </li>
                 `).join('')}
             </ul>
 
-            <!-- Eco-Friendliness -->
             <h3><img src="ICONS/Eco_Icon.png" alt="Eco Icon"> Eco-Friendliness</h3>
             <p>${result.ecoFriendly.description}</p>
 
-            <!-- Nearby Parks -->
             <h3><img src="ICONS/Park_Icon.png" alt="Park Icon"> Nearby Parks</h3>
             <ul>
                 ${result.ecoFriendly.parks.map(p => `
-                    <li>${p.name}: ${p.distance} (${p.time} by walking)</li>
+                    <li><span class="park-name">${p.name}</span></li>
                 `).join('')}
             </ul>
         `;
         resultsContainer.appendChild(resultElement);
     });
 }
+
