@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relocation Insight - Berlin</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+        </div>
+        <nav>
+            <ul>    
+                <li><a href="#" class="nav-link active" data-section="main">Main</a></li>
+                <li><a href="#" class="nav-link" data-section="about">About</a></li>
+                <li><a href="#" class="nav-link" data-section="contact">Contact</a></li>
+                <li><a href="#" class="nav-link" data-section="faq">FAQ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="main" class="section active">
+            <section class="search-section">
+                <img src="images/logo.png" alt="Relocation Insight Logo" class="logo-image">
+                <form id="search-form">
+                    <input type="text" id="search-input" placeholder="Enter an address or general location">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+                <div id="loading-spinner" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Searching for information...</p>
+                </div>
+            </section>
+
+            <section class="results-section">
+                <div id="results">
+                </div>
+            </section>
+        </section>
+
+        <section id="about" class="section">
+            <div class="content-section">
+                <h2>About Relocation Insight</h2>
+                <p>Relocation Insight is your comprehensive guide to finding the perfect neighborhood in Berlin. Our platform provides detailed information about various areas, helping you make informed decisions about where to live.</p>
+                <h3>What We Offer</h3>
+                <ul>
+                    <li>Detailed area information and characteristics</li>
+                    <li>Public transport accessibility (Bus, U-Bahn, and Tram stations)</li>
+                    <li>Nearby amenities including supermarkets and parks</li>
+                    <li>Eco-friendliness information for each area</li>
+                    <li>Walking distances to essential services</li>
+                </ul>
+                <p>Our goal is to make your relocation to Berlin as smooth as possible by providing all the information you need in one place.</p>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="content-section">
+                <h2>Contact Us</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <p>Email: info@relocationinsight.berlin</p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <p>Phone: +49 (0) 30 12345678</p>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>Address: Alexanderplatz 1, 10178 Berlin, Germany</p>
+                    </div>
+                </div>
+                <div class="business-hours">
+                    <h3>Business Hours</h3>
+                    <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+                    <p>Saturday: 10:00 AM - 4:00 PM</p>
+                    <p>Sunday: Closed</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq" class="section">
+            <div class="content-section">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq-item">
+                    <h3>How does Relocation Insight work?</h3>
+                    <p>Simply enter any address or location in Berlin in the search bar, and we'll provide you with comprehensive information about that area, including nearby transport options, amenities, and more.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>What information do you provide?</h3>
+                    <p>We provide detailed information about:</p>
+                    <ul>
+                        <li>Public transport accessibility (Bus, U-Bahn, and Tram stations)</li>
+                        <li>Nearby supermarkets and their walking distances</li>
+                        <li>Parks and green spaces in the area</li>
+                        <li>General area information and characteristics</li>
+                        <li>Eco-friendliness of the neighborhood</li>
+                    </ul>
+                </div>
+                <div class="faq-item">
+                    <h3>How accurate is the information?</h3>
+                    <p>We use reliable APIs and data sources to provide up-to-date information about locations in Berlin. Our data is regularly updated to ensure accuracy.</p>
+                </div>
+                <div class="faq-item">
+                    <h3>Is this service free?</h3>
+                    <p>Yes, Relocation Insight is completely free to use. You can search for any location in Berlin without any cost.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
